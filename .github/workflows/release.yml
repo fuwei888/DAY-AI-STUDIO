@@ -1,0 +1,83 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Create distribution package
+        run: |
+          mkdir -p dist
+          cp index.html style.css app.js dist/
+          cd dist
+          zip -r ../yinzhe-music-player.zip .
+          cd ..
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "version=latest" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: yinzhe-music-player.zip
+          body: |
+            ## 音者音频可视化音乐播放器 v${{ steps.get_version.outputs.version }}
+            
+            ### 使用方法
+            1. 下载 `yinzhe-music-player.zip` 文件
+            2. 解压缩到任意目录
+            3. 用浏览器打开 `index.html` 文件
+            4. 选择音频文件开始播放
+            
+            ### 功能特性
+            - 🎵 支持多种音频格式
+            - 🎨 三种可视化模式（频谱柱状图、波形图、圆形频谱）
+            - 🎛️ 完整的播放控制
+            - 🔊 音量调节
+            - 📊 进度条控制
+            - 📱 响应式设计
+            
+            ---
+            
+            ## Yinzhe Audio Visualization Music Player v${{ steps.get_version.outputs.version }}
+            
+            ### How to Use
+            1. Download `yinzhe-music-player.zip`
+            2. Extract to any directory
+            3. Open `index.html` in your browser
+            4. Select audio files to start playing
+            
+            ### Features
+            - 🎵 Support for multiple audio formats
+            - 🎨 Three visualization modes
+            - 🎛️ Complete playback controls
+            - 🔊 Volume adjustment
+            - 📊 Progress control
+            - 📱 Responsive design
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

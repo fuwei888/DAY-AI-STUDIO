@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音者 - 音频可视化音乐播放器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>音者音乐播放器</h1>
+            <p class="subtitle">Audio Visualization Music Player</p>
+        </header>
+
+        <div class="visualizer-container">
+            <canvas id="visualizer"></canvas>
+        </div>
+
+        <div class="player-controls">
+            <div class="file-input-wrapper">
+                <label for="audio-file" class="file-label">
+                    <span class="file-icon">📁</span>
+                    选择音频文件
+                </label>
+                <input type="file" id="audio-file" accept="audio/*" />
+            </div>
+
+            <div class="current-track">
+                <span id="track-name">未选择文件</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+                <input type="range" id="progress-slider" min="0" max="100" value="0" step="0.1">
+            </div>
+
+            <div class="time-display">
+                <span id="current-time">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+
+            <div class="control-buttons">
+                <button id="prev-btn" class="control-btn" title="上一曲">⏮</button>
+                <button id="play-btn" class="control-btn play-btn" title="播放">▶</button>
+                <button id="next-btn" class="control-btn" title="下一曲">⏭</button>
+            </div>
+
+            <div class="volume-control">
+                <span class="volume-icon">🔊</span>
+                <input type="range" id="volume-slider" min="0" max="100" value="70">
+                <span id="volume-value">70%</span>
+            </div>
+
+            <div class="visualization-mode">
+                <label for="viz-mode">可视化模式:</label>
+                <select id="viz-mode">
+                    <option value="bars">频谱柱状图</option>
+                    <option value="wave">波形图</option>
+                    <option value="circle">圆形频谱</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 音者音乐播放器 | Audio Visualization Music Player</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

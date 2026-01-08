@@ -13,6 +13,7 @@ class AudioPlayer {
         this.currentMode = 'bars';
         this.playlist = [];
         this.currentTrackIndex = -1;
+        this.currentBlobUrl = null;
 
         this.initializeElements();
         this.setupEventListeners();
@@ -62,8 +63,14 @@ class AudioPlayer {
 
     loadTrack(index) {
         if (index >= 0 && index < this.playlist.length) {
+            // Revoke previous blob URL to prevent memory leak
+            if (this.currentBlobUrl) {
+                URL.revokeObjectURL(this.currentBlobUrl);
+            }
+            
             const file = this.playlist[index];
             const url = URL.createObjectURL(file);
+            this.currentBlobUrl = url;
             this.audio.src = url;
             this.trackNameEl.textContent = file.name;
             this.currentTrackIndex = index;
@@ -76,6 +83,11 @@ class AudioPlayer {
                 this.isPlaying = true;
                 this.playBtn.textContent = '⏸';
                 this.visualize();
+            }).catch((error) => {
+                console.error('Playback failed:', error);
+                alert('播放失败，请确保浏览器允许自动播放或选择其他音频文件');
+                this.isPlaying = false;
+                this.playBtn.textContent = '▶';
             });
         }
     }
@@ -107,10 +119,16 @@ class AudioPlayer {
             this.playBtn.textContent = '▶';
             this.isPlaying = false;
         } else {
-            this.audio.play();
-            this.playBtn.textContent = '⏸';
-            this.isPlaying = true;
-            this.visualize();
+            this.audio.play().then(() => {
+                this.playBtn.textContent = '⏸';
+                this.isPlaying = true;
+                this.visualize();
+            }).catch((error) => {
+                console.error('Playback failed:', error);
+                alert('播放失败，请确保浏览器允许自动播放或选择其他音频文件');
+                this.isPlaying = false;
+                this.playBtn.textContent = '▶';
+            });
         }
     }
 

@@ -1,0 +1,30 @@
+{
+  "name": "yinzhe-music-player",
+  "version": "1.0.0",
+  "description": "音者音频可视化音乐播放器 - Audio Visualization Music Player",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8080 -o",
+    "build": "npm run copy-files",
+    "copy-files": "mkdir -p dist && cp index.html style.css app.js dist/",
+    "package": "npm run build && cd dist && zip -r ../yinzhe-music-player-v$npm_package_version.zip ."
+  },
+  "keywords": [
+    "music",
+    "player",
+    "audio",
+    "visualization",
+    "web-audio-api",
+    "音乐播放器"
+  ],
+  "author": "fuwei888",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fuwei888/DAY-AI-STUDIO.git"
+  },
+  "homepage": "https://github.com/fuwei888/DAY-AI-STUDIO#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
